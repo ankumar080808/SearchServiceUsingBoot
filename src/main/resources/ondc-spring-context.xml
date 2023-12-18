@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+		 http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+	<context:annotation-config />
+
+	<import resource="encrypt-spring-secrets-manager.xml" />
+	
+	<!-- <bean id="configurator" class="com.vinculum.ondc.dao.adapter.AdaptiveDBConfigrator" init-method="init" depends-on="vinProps">
+		<property name="dbUrl" value="${${env}.db.url}" />
+		<property name="user" value="${${env}.db.user}" />
+		<property name="password" value="${${env}.db.password}" />
+		<property name="params" value="${db.conn.props}" />
+		<property name="global" value="${db.name.global}" />
+		<property name="driver" value="${db.driver}" />
+		<property name="aliasPackage" value="${db.alias.pack}" />
+		<property name="configLocation" value="${db.config.loc}" />
+		<property name="mapperLocation" value="${db.mapper.loc}" />
+	</bean>  -->
+	
+
+
+	<!--  <tx:annotation-driven transaction-manager="transactionManager"/>-->
+
+	<bean id="connmanager" class="org.apache.http.impl.conn.PoolingHttpClientConnectionManager">
+		<property name="maxTotal" value="300" />
+		<property name="defaultMaxPerRoute" value="300" />
+	</bean>
+	
+	<!--   <bean name="metadata" class="com.vinculum.ondc.objects.MetaData" depends-on="configurator" init-method="init">
+	    <property name="session" ref="sqlSession" />
+		<property name="manager" ref="transactionManager" />
+		<property name="connmanager" ref="connmanager" />
+		<property name="objectMapper" ref="objectMapper" />
+		<property name="datasources" ref="dbIds" />
+		<property name="context">
+	        <map>
+	            
+	            <entry key="callType" value="select" />
+	           
+	        </map>
+        </property>
+	</bean>--> 
+  
+	  <!--   <bean name="ondcService" class="com.vinculum.ondc.service.OndcService" scope="prototype" depends-on="metadata">
+	 	<property name="metaData" ref="metadata" />
+	</bean> -->
+	
+	<bean id="skuQueue" class="java.util.concurrent.ConcurrentLinkedQueue"/>
+	
+	<bean id="skuConfig" class="com.vinculum.ondc.dao.custom.Cron">
+		<property name="cron" value="*/1 * * * *" />
+		<property name="type" value="Every 1 Minute Cron For SKU Processing on Elastic Search" />
+		<property name="mdcType" value="PRODUCTS" />
+		<property name="queue" ref="skuQueue" />
+		<property name="fqcn" value="com.vinculum.ondc.business.OndcSkuProcess" />
+	</bean>
+	
+	<bean id="memoryLog" class="com.vinculum.ondc.dao.custom.Cron">
+		<property name="cron" value="*/1 * * * *" />
+		<property name="type" value="Every 1 Minute Cron For SKU Processing on Elastic Search" />
+		<property name="mdcType" value="PRODUCTS" />
+		<property name="queue" ref="skuQueue" />
+		<property name="fqcn" value="com.vinculum.ondc.scheduler.MemoryLogScheduler" />
+	</bean>
+	
+	
+	
+	<bean id="retryConfirm" class="com.vinculum.ondc.dao.custom.Cron">
+		<property name="cron" value="*/1    " />
+		<property name="type" value="Every 1 Minute Cron For SKU Processing on Elastic Search" />
+		<property name="mdcType" value="CONFIRM" />
+		<property name="queue" ref="skuQueue" />
+		<property name="fqcn" value="com.vinculum.ondc.business.RetryConfirmProcess" />
+	</bean>
+
+	<!-- <util:map id="cronMap" map-class="java.util.LinkedHashMap" key-type="java.lang.Integer" value-type="com.vinculum.ondc.dao.custom.Cron">
+		<entry key="1" value-ref="skuConfig" />
+		 <entry key="2" value-ref="memoryLog" />
+		  <entry key="2" value-ref="retryConfirm" />
+	</util:map>	 -->
+	
+	<util:map id="cronMap" map-class="java.util.LinkedHashMap" key-type="java.lang.Integer" value-type="com.vinculum.ondc.dao.custom.Cron">
+		<entry key="1" value-ref="skuConfig" />	
+		<!--  <entry key="2" value-ref="memoryLog" />-->
+	</util:map>	
+	<!--  
+	 <bean id="initializer" class="com.vinculum.ondc.dao.custom.OndcInitializer" init-method="init" depends-on="configurator">
+		<property name="cronMap" ref="cronMap" />
+		<property name="metadata" ref="metadata" />
+		<property name="schedule" value="${schedule}" />
+	</bean> 
+	-->
+     <!--   <bean name="service" class="com.vinculum.ondc.service.OndcService" scope="prototype">
+		<property name="metaData" ref="metadata" />
+	</bean> -->
+	
+ 	 
+	<!--  <bean id="event" class="com.vinculum.ondc.event.OndcEvent">
+		<property name="service" ref="service" />
+	</bean>--> 
+	 
+	<!--  <bean name="webStarter" class="com.vinculum.ondc.web.Web" init-method="init" >
+		<property name="host" value="${http.host}" />
+		<property name="port" value="${http.port}" />
+		<property name="event" ref="event" />
+		<property name="web" value="${web}" />  
+	</bean> -->
+	
+	
+    <!--  <bean id="objectMappers" class="com.fasterxml.jackson.databind.ObjectMapper" />-->
+    
+    <!--  
+     <bean id="asyncClient" class="co.elastic.clients.elasticsearch.ElasticsearchAsyncClient">
+    	<constructor-arg index="0" ref="transport"/>
+    </bean>
+
+	<bean id="finalClient" factory-bean="restClientBuilder" factory-method="build"/> 
+	
+	<bean id="jsonpMapper" class="co.elastic.clients.json.jackson.JacksonJsonpMapper"></bean>
+	
+	 <bean id="transport" class="co.elastic.clients.transport.rest_client.RestClientTransport">
+    	<constructor-arg index="0" ref="finalClient"/>
+    	<constructor-arg index="1" ref="jsonpMapper"/>
+    </bean>
+    
+    <bean id="elasticsearchClient" class="co.elastic.clients.elasticsearch.ElasticsearchClient ">
+    	<constructor-arg index="0" ref="transport"/>
+    </bean>
+
+	<bean id="httpHost" class="org.apache.http.HttpHost">
+    	<constructor-arg index="0" value="${es.http.host}"/>
+    	<constructor-arg index="1" value="${es.http.port}"/>
+    </bean>
+    
+	<bean id="restClientBuilder" class="org.elasticsearch.client.RestClient" 
+	 	factory-method="builder">
+        	<constructor-arg ref="httpHost"/>               
+    </bean>
+   -->
+   
+	
+</beans>

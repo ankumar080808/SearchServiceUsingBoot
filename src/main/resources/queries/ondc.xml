@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.vinculum.ondc.dao.iface.OndcDao">
+
+	<resultMap id="skuMap" type="com.vinculum.ondc.dao.objects.Sku">
+		<result column="sku" property="sku" jdbcType="VARCHAR" />
+		<result column="skuname" property="name" jdbcType="VARCHAR" />
+		<result column="mrp" property="mrp" jdbcType="NUMERIC" />
+		<result column="LENGTH" property="length" jdbcType="NUMERIC" />
+		<result column="WIDTH" property="width" jdbcType="NUMERIC" />
+		<result column="HEIGHT" property="height" jdbcType="NUMERIC" />
+	</resultMap>
+
+	<select id="getSkus" resultMap="skuMap">
+		<!--  select * FROM SKU
+		where  UPDdate >=#{lastTransmitDate}-->
+		
+		select * FROM SKU limit 50
+	</select>
+
+	<select id="getLastTransmitDate" resultType="java.sql.Timestamp">
+		Select lasttransmitdate from transmitlog where IntCode=#{intCode} ;
+	</select>
+
+	<insert id="insertTransmitLog">
+		INSERT INTO transmitlog (OrgId, LocCode,IntCode, LastTransmitdate,ClientId, CRTBy, CRTDate, UPDBy, UPDdate, RowVersion)
+		VALUES
+		(#{orgId},#{locCode}, #{intCode}, #{lastTransmitDate}, #{clientId},'sa', now(), 'sa', now(), '1');
+	</insert>
+
+	<update id="updateTransmitLog">
+		update transmitlog set lasttransmitdate=#{lastTransmitDate},RowVersion=RowVersion+1 where IntCode=#{intCode} ;
+	</update>
+</mapper>
+ 

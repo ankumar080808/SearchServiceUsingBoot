@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.vinculum.ondc.dao.iface.LookupsDao">
+
+	<resultMap id="clientmastermap" type="com.vinculum.ondc.dao.objects.lookups.ClientMaster">
+		<result column="OrgId" property="OrgId" jdbcType="VARCHAR" />
+		<result column="ClientId" property="ClientId" jdbcType="VARCHAR" />
+		<result column="UDF1" property="UDF1" jdbcType="VARCHAR" />
+		<result column="UDF2" property="UDF2" jdbcType="VARCHAR" />
+		<result column="UDF3" property="UDF3" jdbcType="VARCHAR" />
+		<result column="UDF4" property="UDF4" jdbcType="VARCHAR" />
+		<result column="UDF5" property="UDF5" jdbcType="VARCHAR" />
+		<result column="extClientCode" property="extClientCode" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+	<resultMap id="access" type="com.vinculum.ondc.dao.objects.lookups.Access">
+	    <result column="client_id" property="clientId" jdbcType="VARCHAR" />
+	    <result column="db_id" property="dbId" jdbcType="VARCHAR" />
+	    <result column="org_id" property="orgId" jdbcType="VARCHAR" />
+	    <result column="ukid" property="ukid" jdbcType="VARCHAR" />
+	    <result column="subscriber_id" property="subscriberId" jdbcType="VARCHAR" />
+	    <result column="subscriber_url" property="subscriberUrl" jdbcType="VARCHAR" />
+	    <result column="type" property="type" jdbcType="VARCHAR" />
+	    <result column="domain" property="domain" jdbcType="VARCHAR" />
+	    <result column="domain_desc" property="domainDesc" jdbcType="VARCHAR" />
+	    <result column="country" property="country" jdbcType="VARCHAR" />
+	    <result column="city" property="city" jdbcType="VARCHAR" />
+	    <result column="signing_private_key" property="signingPrivateKey" jdbcType="VARCHAR" />
+	    <result column="encr_private_key" property="encrPrivateKey" jdbcType="VARCHAR" />
+	    <result column="signing_public_key" property="signingPublicKey" jdbcType="VARCHAR" />
+	    <result column="encr_public_key" property="encrPublicKey" jdbcType="VARCHAR" />
+	    <result column="valid_from" property="validFrom" jdbcType="TIMESTAMP" />
+	    <result column="valid_until" property="validUntil" jdbcType="TIMESTAMP" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="active" property="active" jdbcType="VARCHAR" />
+	    <result column="crt_date" property="crtDate" jdbcType="TIMESTAMP" />
+	    <result column="upd_date" property="updDate" jdbcType="TIMESTAMP" />
+	    <result column="upd_by" property="updBy" jdbcType="VARCHAR" />
+	    <result column="bpp_descriptor_name" property="bppDescriptorName" jdbcType="VARCHAR" />
+	    <result column="bpp_descriptor_symbol" property="bppDescriptorSymbol" jdbcType="VARCHAR" />
+	    <result column="bpp_descriptor_short_desc" property="bppDescriptorShortDesc" jdbcType="VARCHAR" />
+	    <result column="bpp_descriptor_long_desc" property="bppDescriptorLongDesc" jdbcType="VARCHAR" />
+	    <result column="bpp_descriptor_images" property="bppDescriptorImages" jdbcType="VARCHAR" />
+	    <result column="bpp_providers_id" property="bppProvidersId" jdbcType="VARCHAR" />
+	    <result column="bpp_providers_time_label" property="bppProvidersTimeLabel" jdbcType="VARCHAR" />
+	    <result column="bpp_providers_time_timestamp" property="bppProvidersTimeStamp" jdbcType="TIMESTAMP" />
+	    <result column="bpp_providers_descriptor_name" property="bppProvidersDescriptorName" jdbcType="VARCHAR" />
+	    <result column="bpp_providers_descriptor_symbol" property="bppProvidersDescriptorSymbol" jdbcType="VARCHAR" />
+	    <result column="bpp_providers_descriptor_short_desc" property="bppProvidersDescriptorShortDesc" jdbcType="VARCHAR" />
+	    <result column="bpp_providers_descriptor_long_desc" property="bppProvidersDescriptorLongDesc" jdbcType="VARCHAR" />
+	    <result column="bpp_providers_descriptor_images" property="bppProvidersDescriptorImages" jdbcType="VARCHAR" />
+      </resultMap>
+
+	 
+	 <select id="getMetaInformation" resultMap="access"> 
+		SELECT client_id, db_id, org_id, ukid, subscriber_id, subscriber_url, type, domain, domain_desc, country,
+		city, signing_private_key, encr_private_key, signing_public_key, encr_public_key, valid_from, valid_until,
+		status, active, crt_date, upd_date, upd_by, bpp_descriptor_name, bpp_descriptor_symbol, bpp_descriptor_short_desc,
+		bpp_descriptor_long_desc, bpp_descriptor_images, bpp_providers_id, bpp_providers_time_label,bpp_providers_time_timestamp,
+		bpp_providers_descriptor_name, bpp_providers_descriptor_symbol, bpp_providers_descriptor_short_desc, 
+		bpp_providers_descriptor_long_desc, bpp_providers_descriptor_images
+        FROM ondcmetadata ;
+	</select>
+	
+	
+	
+</mapper>
+ 
